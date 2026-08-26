@@ -1,0 +1,65 @@
+﻿<Window x:Class="SistemaStock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sistema Stock"
+        Width="1200"
+        Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!-- MENÚ LATERAL -->
+
+        <Border Grid.Column="0"
+                Background="#1E1E2E">
+
+            <StackPanel>
+
+                <TextBlock Text="SISTEMA STOCK"
+                           Foreground="White"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="20"/>
+
+                <Button Content="Inicio"
+                        Margin="15,10"/>
+
+                <Button Content="Productos"
+                        Margin="15,10"/>
+
+                <Button Content="Movimientos"
+                        Margin="15,10"/>
+
+                <Button Content="Configuración"
+                        Margin="15,10"/>
+
+            </StackPanel>
+
+        </Border>
+
+
+        <!-- CONTENIDO -->
+
+        <Border Grid.Column="1"
+                Background="#F5F5F5">
+
+            <Grid>
+
+                <TextBlock Text="Dashboard"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Margin="30"/>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</Window>
