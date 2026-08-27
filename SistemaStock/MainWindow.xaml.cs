@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SistemaStock.Views;
 
 namespace SistemaStock
 {
@@ -19,6 +20,24 @@ namespace SistemaStock
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void btnProductos_Click(object sender, RoutedEventArgs e)
+        {
+            Productos ventana = new Productos();
+            ventana.Show();
+        }
+
+        private void btnMovimientos_Click(object sender, RoutedEventArgs e)
+        {
+            Movimientos ventana = new Movimientos();
+            ventana.Show();
+        }
+
+        private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
+        {
+            Configuracion ventana = new Configuracion();
+            ventana.Show();
         }
     }
 }
