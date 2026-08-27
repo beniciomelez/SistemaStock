@@ -44,11 +44,12 @@
             </Grid.ColumnDefinitions>
 
 
-            <TextBox Grid.Column="0"
-                     Height="40"
-                     FontSize="16"
-                     Padding="10"
-                     Text="Buscar producto..."/>
+            <TextBox x:Name="txtBuscar"
+                    Grid.Column="0"
+                    Height="40"
+                    FontSize="16"
+                    Padding="10"
+                    TextChanged="BuscarProducto_TextChanged"/>
 
 
             <Button Grid.Column="1"

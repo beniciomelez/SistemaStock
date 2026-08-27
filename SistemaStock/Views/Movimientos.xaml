@@ -39,15 +39,18 @@
                     Orientation="Horizontal"
                     Margin="0,0,0,20">
 
-            <TextBox Width="250"
-                     Height="40"
-                     FontSize="15"
-                     Padding="10"
-                     Text="Buscar producto..."/>
+            <TextBox x:Name="txtBuscarMovimiento"
+                        Width="250"
+                        Height="40"
+                        FontSize="15"
+                        Padding="10"
+                        TextChanged="txtBuscarMovimiento_TextChanged"/>
 
-            <ComboBox Width="150"
-                      Height="40"
-                      Margin="15,0,0,0">
+            <ComboBox x:Name="cmbTipo"
+          Width="150"
+          Height="40"
+          Margin="15,0,0,0"
+          SelectionChanged="cmbTipo_SelectionChanged">
 
                 <ComboBoxItem Content="Todos"/>
                 <ComboBoxItem Content="Entrada"/>
@@ -60,9 +63,10 @@
 
         <!-- TABLA -->
 
-        <DataGrid Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True">
+        <DataGrid x:Name="TablaMovimientos"
+          Grid.Row="2"
+          AutoGenerateColumns="False"
+          IsReadOnly="True">
 
             <DataGrid.Columns>
 
