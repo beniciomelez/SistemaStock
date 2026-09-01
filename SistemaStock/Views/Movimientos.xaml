@@ -36,27 +36,34 @@
         <!-- FILTROS -->
 
         <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    Margin="0,0,0,20">
+            Orientation="Horizontal"
+            Margin="0,0,0,20">
 
             <TextBox x:Name="txtBuscarMovimiento"
-                        Width="250"
-                        Height="40"
-                        FontSize="15"
-                        Padding="10"
-                        TextChanged="txtBuscarMovimiento_TextChanged"/>
+             Width="250"
+             Height="40"
+             FontSize="15"
+             Padding="10"
+             TextChanged="txtBuscarMovimiento_TextChanged"/>
 
             <ComboBox x:Name="cmbTipo"
-          Width="150"
-          Height="40"
-          Margin="15,0,0,0"
-          SelectionChanged="cmbTipo_SelectionChanged">
+              Width="150"
+              Height="40"
+              Margin="15,0,0,0"
+              SelectionChanged="cmbTipo_SelectionChanged">
 
                 <ComboBoxItem Content="Todos"/>
                 <ComboBoxItem Content="Entrada"/>
                 <ComboBoxItem Content="Salida"/>
 
             </ComboBox>
+
+            <!-- BOTÓN NUEVO -->
+            <Button Content="+ Agregar movimiento"
+            Width="180"
+            Height="40"
+            Margin="15,0,0,0"
+            Click="AgregarMovimiento_Click"/>
 
         </StackPanel>
 

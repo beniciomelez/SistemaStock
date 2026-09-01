@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SistemaStock.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Linq;
 
 
 
@@ -20,18 +21,19 @@ namespace SistemaStock.Views
     /// </summary>
     public partial class Movimientos : Window
     {
-        private List<Models.Movimiento> movimientos = new List<Models.Movimiento>();
+        
 
         public Movimientos()
         {
             InitializeComponent();
-
-            movimientos.Add(new Models.Movimiento { Id = 1, Producto = "Producto 1", Tipo = "Entrada", Cantidad = 10, Fecha = "2024-06-01" });
-            movimientos.Add(new Models.Movimiento { Id = 2, Producto = "Producto 2", Tipo = "Salida", Cantidad = 5, Fecha = "2024-06-02" });
-            movimientos.Add(new Models.Movimiento { Id = 3, Producto = "Producto 3", Tipo = "Entrada", Cantidad = 20, Fecha = "2024-06-03" });
-
+            if (Datos.Movimientos.Count == 0)
+            {
+                Datos.Movimientos.Add(new Models.Movimiento { Id = 1, Producto = "Producto 1", Tipo = "Entrada", Cantidad = 10, Fecha = "2024-06-01" });
+                Datos.Movimientos.Add(new Models.Movimiento { Id = 2, Producto = "Producto 2", Tipo = "Salida", Cantidad = 5, Fecha = "2024-06-02" });
+                Datos.Movimientos.Add(new Models.Movimiento { Id = 3, Producto = "Producto 3", Tipo = "Entrada", Cantidad = 20, Fecha = "2024-06-03" });     
+            }
             cmbTipo.SelectedIndex = 0;
-            TablaMovimientos.ItemsSource = movimientos;
+            TablaMovimientos.ItemsSource = Datos.Movimientos;
         }
         private void FiltrarMovimientos_Click(object sender, RoutedEventArgs e)
         {
@@ -39,11 +41,11 @@ namespace SistemaStock.Views
             List<Models.Movimiento> resultados;
             if (tipoSeleccionado == "Todos")
             {
-                resultados = movimientos;
+                resultados = Datos.Movimientos;
             }
             else
             {
-                resultados = movimientos.FindAll(m => m.Tipo == tipoSeleccionado);
+                resultados = Datos.Movimientos.FindAll(m => m.Tipo == tipoSeleccionado);
             }
             TablaMovimientos.ItemsSource = resultados;
 
@@ -60,7 +62,7 @@ namespace SistemaStock.Views
                 tipo = item.Content.ToString();
             }
 
-            var resultados = movimientos
+            var resultados = Datos.Movimientos
                 .Where(m => m.Producto.ToLower().Contains(texto))
                 .Where(m => tipo == "Todos" || m.Tipo == tipo)
                 .ToList();
@@ -75,6 +77,17 @@ namespace SistemaStock.Views
         private void cmbTipo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Filtrar();
+        }
+
+        private void AgregarMovimiento_Click(object sender, RoutedEventArgs e)
+        {
+            AgregarMovimiento ventana = new AgregarMovimiento();
+
+            if (ventana.ShowDialog() == true)
+            {
+                TablaMovimientos.ItemsSource = null;
+                TablaMovimientos.ItemsSource = Datos.Movimientos;
+            }
         }
 
     }

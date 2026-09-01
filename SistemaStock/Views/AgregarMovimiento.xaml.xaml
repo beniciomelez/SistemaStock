@@ -1,0 +1,66 @@
+﻿<Window x:Class="SistemaStock.Views.AgregarMovimiento"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Agregar movimiento"
+        Width="450"
+        Height="450"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="30">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Agregar movimiento"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Margin="0,0,0,25"/>
+
+        <ComboBox x:Name="cmbProducto"
+                  Grid.Row="1"
+                  Height="40"
+                  Margin="0,0,0,15"
+                  FontSize="15"/>
+
+        <ComboBox x:Name="cmbTipoMovimiento"
+                  Grid.Row="2"
+                  Height="40"
+                  Margin="0,0,0,15"
+                  FontSize="15">
+
+            <ComboBoxItem Content="Entrada"/>
+            <ComboBoxItem Content="Salida"/>
+
+        </ComboBox>
+
+        <TextBox x:Name="txtCantidad"
+                 Grid.Row="3"
+                 Height="40"
+                 Margin="0,0,0,20"
+                 Padding="10"
+                 FontSize="15"/>
+
+        <Button Grid.Row="4"
+                Content="Guardar movimiento"
+                Width="182"
+                HorizontalAlignment="Center"
+                Click="GuardarMovimiento_Click" Margin="0,47,0,46" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="0"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="0"/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+
+    </Grid>
+
+</Window>
