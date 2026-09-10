@@ -26,12 +26,9 @@ namespace SistemaStock.Views
         public Movimientos()
         {
             InitializeComponent();
-            if (Datos.Movimientos.Count == 0)
-            {
-                Datos.Movimientos.Add(new Models.Movimiento { Id = 1, Producto = "Producto 1", Tipo = "Entrada", Cantidad = 10, Fecha = "2024-06-01" });
-                Datos.Movimientos.Add(new Models.Movimiento { Id = 2, Producto = "Producto 2", Tipo = "Salida", Cantidad = 5, Fecha = "2024-06-02" });
-                Datos.Movimientos.Add(new Models.Movimiento { Id = 3, Producto = "Producto 3", Tipo = "Entrada", Cantidad = 20, Fecha = "2024-06-03" });     
-            }
+
+            Datos.InicializarDatos();
+
             cmbTipo.SelectedIndex = 0;
             TablaMovimientos.ItemsSource = Datos.Movimientos;
         }
@@ -63,9 +60,16 @@ namespace SistemaStock.Views
             }
 
             var resultados = Datos.Movimientos
-                .Where(m => m.Producto.ToLower().Contains(texto))
-                .Where(m => tipo == "Todos" || m.Tipo == tipo)
-                .ToList();
+    .Where(m =>
+    {
+        var producto = Datos.Productos
+            .FirstOrDefault(p => p.Id == m.ProductoId);
+
+        return producto != null &&
+               producto.Nombre.ToLower().Contains(texto);
+    })
+    .Where(m => tipo == "Todos" || m.Tipo == tipo)
+    .ToList();
 
             TablaMovimientos.ItemsSource = resultados;
         }

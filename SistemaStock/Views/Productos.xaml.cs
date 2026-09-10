@@ -16,8 +16,7 @@ namespace SistemaStock.Views
         {
             InitializeComponent();
 
-            Datos.InicializarDatos();
-            TablaProductos.ItemsSource = Datos.Productos;
+            CargarProductos();
         }
 
         private void AgregarProducto_Click(object sender, RoutedEventArgs e)
@@ -28,11 +27,32 @@ namespace SistemaStock.Views
             {
                 Producto nuevo = ventana.nuevoProducto;
 
-                nuevo.Id = Datos.Productos.Count + 1;
+                using (var conexion = Conexion.ObtenerConexion())
+                {
+                    conexion.Open();
+
+                    string sql = @"INSERT INTO Productos
+                           (Nombre, Categoria, Precio, Stock, StockMinimo)
+                           VALUES
+                           (@Nombre, @Categoria, @Precio, @Stock, @StockMinimo)";
+
+                    using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                    {
+                        comando.Parameters.AddWithValue("@Nombre", nuevo.Nombre);
+                        comando.Parameters.AddWithValue("@Categoria", nuevo.Categoria);
+                        comando.Parameters.AddWithValue("@Precio", nuevo.Precio);
+                        comando.Parameters.AddWithValue("@Stock", nuevo.Stock);
+                        comando.Parameters.AddWithValue("@StockMinimo", nuevo.StockMinimo);
+
+                        comando.ExecuteNonQuery();
+                    }
+                }
 
                 Datos.Productos.Add(nuevo);
 
                 TablaProductos.Items.Refresh();
+
+                MessageBox.Show("Producto guardado correctamente.");
             }
         }
 
@@ -47,6 +67,38 @@ namespace SistemaStock.Views
             TablaProductos.ItemsSource = resultados;
         }
 
+        private void CargarProductos()
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (var conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+
+                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo
+                       FROM Productos";
+
+                using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                using (var reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        productos.Add(new Producto
+                        {
+                            Id = reader.GetInt32(0),
+                            Nombre = reader.GetString(1),
+                            Categoria = reader.GetString(2),
+                            Precio = reader.GetDecimal(3),
+                            Stock = reader.GetInt32(4),
+                            StockMinimo = reader.GetInt32(5)
+                        });
+                    }
+                }
+            }
+
+            Datos.Productos = productos;
+            TablaProductos.ItemsSource = Datos.Productos;
+        }
 
     }
 }

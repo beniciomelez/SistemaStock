@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SistemaStock.Views;
+using System.Linq;
+using SistemaStock.Models;
 
 namespace SistemaStock
 {
@@ -20,24 +22,45 @@ namespace SistemaStock
         public MainWindow()
         {
             InitializeComponent();
+            Datos.InicializarDatos();
+            ActualizarDashboard();
         }
 
         private void btnProductos_Click(object sender, RoutedEventArgs e)
         {
             Productos ventana = new Productos();
-            ventana.Show();
+            ventana.ShowDialog();
+            ActualizarDashboard();
         }
 
         private void btnMovimientos_Click(object sender, RoutedEventArgs e)
         {
-            Movimientos ventana = new Movimientos();
-            ventana.Show();
+              Movimientos ventana = new Movimientos();
+              ventana.ShowDialog();
+              ActualizarDashboard();
+            
         }
 
         private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
         {
             Configuracion ventana = new Configuracion();
             ventana.Show();
+        }
+
+        private void ActualizarDashboard()
+        {
+            txtTotalProductos.Text = Datos.Productos.Count.ToString();
+
+            txtStockTotal.Text = Datos.Productos.Sum(p => p.Stock).ToString();
+
+            txtStockBajo.Text = Datos.Productos
+                .Count(p => p.Stock < p.StockMinimo)
+                .ToString();
+
+            TablaUltimosMovimientos.ItemsSource = Datos.Movimientos
+                .OrderByDescending(m => m.Fecha)
+                .Take(5)
+                .ToList();
         }
     }
 }

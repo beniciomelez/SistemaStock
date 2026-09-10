@@ -70,7 +70,7 @@ namespace SistemaStock.Views
                     Movimiento nuevoMovimiento = new Movimiento
                     {
                         Id = Datos.Movimientos.Count + 1,
-                        Producto = productoSeleccionado.Nombre,
+                        ProductoId = productoSeleccionado.Id,
                         Tipo = tipo,
                         Cantidad = cantidad,
                         Fecha = DateTime.Now.ToString("yyyy-MM-dd")

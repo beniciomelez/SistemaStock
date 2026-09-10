@@ -9,7 +9,7 @@ namespace SistemaStock.Models
        
         
             public int Id { get; set; }
-            public string Producto { get; set; }
+            public int ProductoId { get; set; }
             public string Tipo { get; set; }
             public int Cantidad { get; set; }
             public string Fecha { get; set; }

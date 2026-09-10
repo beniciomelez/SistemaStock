@@ -46,7 +46,8 @@ namespace SistemaStock.Views
                 Nombre = txtNombre.Text,
                 Categoria = txtCategoria.Text,
                 Precio = precio,
-                Stock = stock
+                Stock = stock,
+                StockMinimo = 10
             };
 
             DialogResult = true;
