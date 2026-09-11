@@ -27,10 +27,8 @@ namespace SistemaStock.Views
         {
             InitializeComponent();
 
-            Datos.InicializarDatos();
-
             cmbTipo.SelectedIndex = 0;
-            TablaMovimientos.ItemsSource = Datos.Movimientos;
+            CargarMovimientos();
         }
         private void FiltrarMovimientos_Click(object sender, RoutedEventArgs e)
         {
@@ -94,5 +92,38 @@ namespace SistemaStock.Views
             }
         }
 
+        private void CargarMovimientos()
+        {
+            List<Models.Movimiento> movimientos = new List<Models.Movimiento>();
+            using (var conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+                string sql = @"
+                            SELECT M.Id, M.ProductoId, P.Nombre, M.Tipo, M.Cantidad, M.Fecha
+                            FROM Movimientos M
+                            INNER JOIN Productos P ON M.ProductoId = P.Id
+                            ORDER BY M.Id DESC";
+                using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                {
+                    using (var lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            Models.Movimiento movimiento = new Models.Movimiento
+                            {
+                                Id = lector.GetInt32(0),
+                                ProductoId = lector.GetInt32(1),
+                                Tipo = lector.GetString(3),
+                                Cantidad = lector.GetInt32(4),
+                                Fecha = lector.GetString(5)
+                            };
+                            movimientos.Add(movimiento);
+                        }
+                    }
+                }
+            }
+            Datos.Movimientos = movimientos;
+            TablaMovimientos.ItemsSource = Datos.Movimientos;
+        }
     }
 }

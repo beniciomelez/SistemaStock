@@ -11,69 +11,33 @@ namespace SistemaStock.Models
 
         public static List<Movimiento> Movimientos { get; set; } = new List<Movimiento>();
 
-        public static void InicializarDatos()
+        public static void CargarProductos()
         {
-            if (Productos.Count == 0)
+            Productos.Clear();
+
+            using (var conexion = Conexion.ObtenerConexion())
             {
-                Productos.Add(new Producto
-                {
-                    Id = 1,
-                    Nombre = "Producto 1",
-                    Categoria = "Categoría A",
-                    Precio = 10.99m,
-                    Stock = 100,
-                    StockMinimo = 20
-                });
+                conexion.Open();
 
-                Productos.Add(new Producto
-                {
-                    Id = 2,
-                    Nombre = "Producto 2",
-                    Categoria = "Categoría B",
-                    Precio = 15.49m,
-                    Stock = 50,
-                    StockMinimo = 10
-                });
+                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo
+                       FROM Productos";
 
-                Productos.Add(new Producto
+                using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                using (var lector = comando.ExecuteReader())
                 {
-                    Id = 3,
-                    Nombre = "Producto 3",
-                    Categoria = "Categoría A",
-                    Precio = 7.99m,
-                    Stock = 200,
-                    StockMinimo = 30
-                });
-            }
-
-            if (Movimientos.Count == 0)
-            {
-                Movimientos.Add(new Movimiento
-                {
-                    Id = 1,
-                    ProductoId = 1 ,
-                    Tipo = "Entrada",
-                    Cantidad = 10,
-                    Fecha = "2024-06-01"
-                });
-
-                Movimientos.Add(new Movimiento
-                {
-                    Id = 2,
-                    ProductoId = 2,
-                    Tipo = "Salida",
-                    Cantidad = 5,
-                    Fecha = "2024-06-02"
-                });
-
-                Movimientos.Add(new Movimiento
-                {
-                    Id = 3,
-                    ProductoId = 3,
-                    Tipo = "Entrada",
-                    Cantidad = 20,
-                    Fecha = "2024-06-03"
-                });
+                    while (lector.Read())
+                    {
+                        Productos.Add(new Producto
+                        {
+                            Id = lector.GetInt32(0),
+                            Nombre = lector.GetString(1),
+                            Categoria = lector.GetString(2),
+                            Precio = lector.GetDecimal(3),
+                            Stock = lector.GetInt32(4),
+                            StockMinimo = lector.GetInt32(5)
+                        });
+                    }
+                }
             }
         }
     }

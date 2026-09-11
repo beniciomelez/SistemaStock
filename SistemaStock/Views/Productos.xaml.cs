@@ -33,6 +33,7 @@ namespace SistemaStock.Views
 
                     string sql = @"INSERT INTO Productos
                            (Nombre, Categoria, Precio, Stock, StockMinimo)
+                           OUTPUT INSERTED.Id
                            VALUES
                            (@Nombre, @Categoria, @Precio, @Stock, @StockMinimo)";
 
@@ -44,7 +45,7 @@ namespace SistemaStock.Views
                         comando.Parameters.AddWithValue("@Stock", nuevo.Stock);
                         comando.Parameters.AddWithValue("@StockMinimo", nuevo.StockMinimo);
 
-                        comando.ExecuteNonQuery();
+                        nuevo.Id = Convert.ToInt32(comando.ExecuteScalar());
                     }
                 }
 

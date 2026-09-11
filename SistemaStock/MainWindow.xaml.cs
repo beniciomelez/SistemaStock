@@ -22,7 +22,9 @@ namespace SistemaStock
         public MainWindow()
         {
             InitializeComponent();
-            Datos.InicializarDatos();
+            Datos.CargarProductos();
+            CargarMovimientos();
+
             ActualizarDashboard();
         }
 
@@ -30,14 +32,19 @@ namespace SistemaStock
         {
             Productos ventana = new Productos();
             ventana.ShowDialog();
+           ;
             ActualizarDashboard();
+            
         }
 
         private void btnMovimientos_Click(object sender, RoutedEventArgs e)
         {
               Movimientos ventana = new Movimientos();
               ventana.ShowDialog();
-              ActualizarDashboard();
+              Datos.CargarProductos();
+              CargarMovimientos();
+
+            ActualizarDashboard();
             
         }
 
@@ -49,6 +56,8 @@ namespace SistemaStock
 
         private void ActualizarDashboard()
         {
+            Datos.CargarProductos();
+
             txtTotalProductos.Text = Datos.Productos.Count.ToString();
 
             txtStockTotal.Text = Datos.Productos.Sum(p => p.Stock).ToString();
@@ -61,6 +70,35 @@ namespace SistemaStock
                 .OrderByDescending(m => m.Fecha)
                 .Take(5)
                 .ToList();
+        }
+
+       private void CargarMovimientos()
+        {
+            Datos.Movimientos.Clear();
+            using (var conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+
+                string sql = @"SELECT Id, ProductoId, Tipo, Cantidad, Fecha
+                       FROM Movimientos
+                       ORDER BY Id DESC";
+
+                using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                using (var lector = comando.ExecuteReader())
+                {
+                    while (lector.Read())
+                    {
+                        Datos.Movimientos.Add(new Movimiento
+                        {
+                            Id = lector.GetInt32(0),
+                            ProductoId = lector.GetInt32(1),
+                            Tipo = lector.GetString(2),
+                            Cantidad = lector.GetInt32(3),
+                            Fecha = lector.GetString(4)
+                        });
+                    }
+                }
+            }
         }
     }
 }
