@@ -113,6 +113,7 @@ namespace SistemaStock.Views
                             {
                                 Id = lector.GetInt32(0),
                                 ProductoId = lector.GetInt32(1),
+                                Producto = lector.GetString(2),
                                 Tipo = lector.GetString(3),
                                 Cantidad = lector.GetInt32(4),
                                 Fecha = lector.GetString(5)

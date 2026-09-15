@@ -20,6 +20,24 @@ namespace SistemaStock.Views
         public Configuracion()
         {
             InitializeComponent();
+            txtStockMinimo.Text = Properties.Settings.Default.StockMinimoPredeterminado.ToString();
         }
+
+        private void BtnGuardarStockMinimo_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(txtStockMinimo.Text, out int stockMinimo) && stockMinimo >= 0)
+            {
+                Properties.Settings.Default.StockMinimoPredeterminado = stockMinimo;
+                Properties.Settings.Default.Save();
+
+                MessageBox.Show("Stock mínimo guardado correctamente.");
+            }
+            else
+            {
+                MessageBox.Show("Ingresá un número válido.");
+            }
+        }
+
     }
+
 }

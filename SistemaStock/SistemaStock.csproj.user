@@ -8,9 +8,6 @@
     <Compile Update="Views\AgregarProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Configuracion.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\Movimientos.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

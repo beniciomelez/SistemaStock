@@ -3,8 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Agregar producto"
         Width="450"
-        Height="450"
+        Height="620"
         WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="TextBoxConPlaceholder" TargetType="TextBox">
+            <Style.Resources>
+                <VisualBrush x:Key="PlaceholderBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                    <VisualBrush.Visual>
+                        <TextBlock Padding="10,0,0,0"
+                                   Foreground="Gray"
+                                   Text="{Binding Tag, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="{StaticResource PlaceholderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="30">
 
@@ -14,40 +33,82 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
+        <TextBlock x:Name="txtTitulo"
+                   Grid.Row="0"
                    Text="Agregar producto"
                    FontSize="28"
                    FontWeight="Bold"
                    Margin="0,0,0,25"/>
 
-        <TextBox x:Name="txtNombre"
-                 Grid.Row="1"
-                 Height="40"
-                 Margin="0,0,0,15"
-                 Padding="10"/>
+        <TextBlock Grid.Row="1"
+                   Text="Nombre del producto:"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,5"/>
 
-        <TextBox x:Name="txtCategoria"
+        <TextBox x:Name="txtNombre"
                  Grid.Row="2"
                  Height="40"
                  Margin="0,0,0,15"
-                 Padding="10"/>
+                 Padding="10"
+                 Tag="Ej. Coca Cola 1.5L"
+                 Style="{StaticResource TextBoxConPlaceholder}"
+                 PreviewTextInput="SoloTexto_PreviewTextInput"/>
 
-        <TextBox x:Name="txtPrecio"
-                 Grid.Row="3"
-                 Height="40"
-                 Margin="0,0,0,15"
-                 Padding="10"/>
+        <TextBlock Grid.Row="3"
+                   Text="Categoría:"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,5"/>
 
-        <TextBox x:Name="txtStock"
+        <TextBox x:Name="txtCategoria"
                  Grid.Row="4"
                  Height="40"
                  Margin="0,0,0,15"
-                 Padding="10"/>
+                 Padding="10"
+                 Tag="Ej. Bebidas"
+                 Style="{StaticResource TextBoxConPlaceholder}"
+                 PreviewTextInput="SoloTexto_PreviewTextInput"/>
 
-        <Button Grid.Row="5"
+        <TextBlock Grid.Row="5"
+                   Text="Precio ($):"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,5"/>
+
+        <TextBox x:Name="txtPrecio"
+                 Grid.Row="6"
+                 Height="40"
+                 Margin="0,0,0,15"
+                 Padding="10"
+                 Tag="Ej. 10.99"
+                 Style="{StaticResource TextBoxConPlaceholder}"
+                 PreviewTextInput="Precio_PreviewTextInput"/>
+
+        <TextBlock Grid.Row="7"
+                   Text="Stock inicial:"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,5"/>
+
+        <TextBox x:Name="txtStock"
+                 Grid.Row="8"
+                 Height="40"
+                 Margin="0,0,0,15"
+                 Padding="10"
+                 Tag="Ej. 100"
+                 Style="{StaticResource TextBoxConPlaceholder}"
+                 PreviewTextInput="SoloNumeros_PreviewTextInput"/>
+
+        <Button x:Name="btnAgregar"
+                Grid.Row="9"
                 Content="Agregar"
                 Width="120"
                 Height="40"

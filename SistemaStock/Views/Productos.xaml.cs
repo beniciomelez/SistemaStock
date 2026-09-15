@@ -31,29 +31,82 @@ namespace SistemaStock.Views
                 {
                     conexion.Open();
 
-                    string sql = @"INSERT INTO Productos
-                           (Nombre, Categoria, Precio, Stock, StockMinimo)
-                           OUTPUT INSERTED.Id
-                           VALUES
-                           (@Nombre, @Categoria, @Precio, @Stock, @StockMinimo)";
+                    // Buscar si ya existe un producto inactivo con el mismo nombre para reactivarlo
+                    Producto existente = null;
 
-                    using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                    string sqlBuscar = @"SELECT Id, StockMinimo FROM Productos
+                                 WHERE Activo = 0 AND LOWER(Nombre) = LOWER(@Nombre)";
+
+                    using (var comandoBuscar = new Microsoft.Data.SqlClient.SqlCommand(sqlBuscar, conexion))
                     {
-                        comando.Parameters.AddWithValue("@Nombre", nuevo.Nombre);
-                        comando.Parameters.AddWithValue("@Categoria", nuevo.Categoria);
-                        comando.Parameters.AddWithValue("@Precio", nuevo.Precio);
-                        comando.Parameters.AddWithValue("@Stock", nuevo.Stock);
-                        comando.Parameters.AddWithValue("@StockMinimo", nuevo.StockMinimo);
+                        comandoBuscar.Parameters.AddWithValue("@Nombre", nuevo.Nombre);
 
-                        nuevo.Id = Convert.ToInt32(comando.ExecuteScalar());
+                        using (var lector = comandoBuscar.ExecuteReader())
+                        {
+                            if (lector.Read())
+                            {
+                                existente = new Producto
+                                {
+                                    Id = lector.GetInt32(0),
+                                    StockMinimo = lector.GetInt32(1)
+                                };
+                            }
+                        }
+                    }
+
+                    if (existente != null)
+                    {
+                        string sqlReactivar = @"UPDATE Productos
+                                SET Activo = 1,
+                                    Categoria = @Categoria,
+                                    Precio = @Precio,
+                                    Stock = @Stock
+                                WHERE Id = @Id";
+
+                        using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sqlReactivar, conexion))
+                        {
+                            comando.Parameters.AddWithValue("@Categoria", nuevo.Categoria);
+                            comando.Parameters.AddWithValue("@Precio", nuevo.Precio);
+                            comando.Parameters.AddWithValue("@Stock", nuevo.Stock);
+                            comando.Parameters.AddWithValue("@Id", existente.Id);
+
+                            comando.ExecuteNonQuery();
+                        }
+
+                        nuevo.Id = existente.Id;
+                        nuevo.StockMinimo = existente.StockMinimo;
+                        nuevo.Activo = true;
+
+                        MessageBox.Show("El producto ya existía y fue reactivado correctamente.");
+                    }
+                    else
+                    {
+                        string sql = @"INSERT INTO Productos
+                               (Nombre, Categoria, Precio, Stock, StockMinimo, Activo)
+                               OUTPUT INSERTED.Id
+                               VALUES
+                               (@Nombre, @Categoria, @Precio, @Stock, @StockMinimo, 1)";
+
+                        using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                        {
+                            comando.Parameters.AddWithValue("@Nombre", nuevo.Nombre);
+                            comando.Parameters.AddWithValue("@Categoria", nuevo.Categoria);
+                            comando.Parameters.AddWithValue("@Precio", nuevo.Precio);
+                            comando.Parameters.AddWithValue("@Stock", nuevo.Stock);
+                            comando.Parameters.AddWithValue("@StockMinimo", nuevo.StockMinimo);
+
+                            nuevo.Id = Convert.ToInt32(comando.ExecuteScalar());
+                        }
+
+                        nuevo.Activo = true;
+
+                        MessageBox.Show("Producto guardado correctamente.");
                     }
                 }
 
                 Datos.Productos.Add(nuevo);
 
                 TablaProductos.Items.Refresh();
-
-                MessageBox.Show("Producto guardado correctamente.");
             }
         }
 
@@ -68,6 +121,89 @@ namespace SistemaStock.Views
             TablaProductos.ItemsSource = resultados;
         }
 
+        private void EditarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.DataContext is not Producto producto)
+            {
+                return;
+            }
+
+            AgregarProducto ventana = new AgregarProducto(producto);
+
+            if (ventana.ShowDialog() == true)
+            {
+                Producto editado = ventana.nuevoProducto;
+
+                using (var conexion = Conexion.ObtenerConexion())
+                {
+                    conexion.Open();
+
+                    string sql = @"UPDATE Productos
+                           SET Nombre = @Nombre,
+                               Categoria = @Categoria,
+                               Precio = @Precio,
+                               Stock = @Stock
+                           WHERE Id = @Id";
+
+                    using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                    {
+                        comando.Parameters.AddWithValue("@Nombre", editado.Nombre);
+                        comando.Parameters.AddWithValue("@Categoria", editado.Categoria);
+                        comando.Parameters.AddWithValue("@Precio", editado.Precio);
+                        comando.Parameters.AddWithValue("@Stock", editado.Stock);
+                        comando.Parameters.AddWithValue("@Id", editado.Id);
+
+                        comando.ExecuteNonQuery();
+                    }
+                }
+
+                TablaProductos.Items.Refresh();
+
+                MessageBox.Show("Producto actualizado correctamente.");
+            }
+        }
+
+        private void EliminarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.DataContext is not Producto producto)
+            {
+                return;
+            }
+
+            var confirmacion = MessageBox.Show(
+                $"¿Seguro que querés eliminar \"{producto.Nombre}\"? Los movimientos históricos se conservarán.",
+                "Eliminar producto",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirmacion != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            using (var conexion = Conexion.ObtenerConexion())
+            {
+                conexion.Open();
+
+                string sql = "UPDATE Productos SET Activo = 0 WHERE Id = @Id";
+
+                using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+                {
+                    comando.Parameters.AddWithValue("@Id", producto.Id);
+                    comando.ExecuteNonQuery();
+                }
+            }
+
+            Datos.Productos.Remove(producto);
+
+            string texto = txtBuscar.Text.ToLower();
+            TablaProductos.ItemsSource = Datos.Productos
+                .Where(p => p.Nombre.ToLower().Contains(texto))
+                .ToList();
+
+            MessageBox.Show("Producto eliminado correctamente.");
+        }
+
         private void CargarProductos()
         {
             List<Producto> productos = new List<Producto>();
@@ -76,8 +212,9 @@ namespace SistemaStock.Views
             {
                 conexion.Open();
 
-                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo
-                       FROM Productos";
+                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo, Activo
+                       FROM Productos
+                       WHERE Activo = 1";
 
                 using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
                 using (var reader = comando.ExecuteReader())
@@ -91,7 +228,8 @@ namespace SistemaStock.Views
                             Categoria = reader.GetString(2),
                             Precio = reader.GetDecimal(3),
                             Stock = reader.GetInt32(4),
-                            StockMinimo = reader.GetInt32(5)
+                            StockMinimo = reader.GetInt32(5),
+                            Activo = reader.GetBoolean(6)
                         });
                     }
                 }

@@ -51,7 +51,8 @@ namespace SistemaStock
         private void btnConfiguracion_Click(object sender, RoutedEventArgs e)
         {
             Configuracion ventana = new Configuracion();
-            ventana.Show();
+            ventana.ShowDialog();
+            ActualizarDashboard();
         }
 
         private void ActualizarDashboard()
@@ -62,8 +63,10 @@ namespace SistemaStock
 
             txtStockTotal.Text = Datos.Productos.Sum(p => p.Stock).ToString();
 
+            int stockMinimo = Properties.Settings.Default.StockMinimoPredeterminado;
+
             txtStockBajo.Text = Datos.Productos
-                .Count(p => p.Stock < p.StockMinimo)
+                .Count(p => p.Stock < stockMinimo)
                 .ToString();
 
             TablaUltimosMovimientos.ItemsSource = Datos.Movimientos
@@ -79,9 +82,10 @@ namespace SistemaStock
             {
                 conexion.Open();
 
-                string sql = @"SELECT Id, ProductoId, Tipo, Cantidad, Fecha
-                       FROM Movimientos
-                       ORDER BY Id DESC";
+                string sql = @"SELECT m.Id, m.ProductoId, p.Nombre, m.Tipo, m.Cantidad, m.Fecha
+                       FROM Movimientos m
+                       INNER JOIN Productos p ON p.Id = m.ProductoId
+                       ORDER BY m.Id DESC";
 
                 using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
                 using (var lector = comando.ExecuteReader())
@@ -92,9 +96,10 @@ namespace SistemaStock
                         {
                             Id = lector.GetInt32(0),
                             ProductoId = lector.GetInt32(1),
-                            Tipo = lector.GetString(2),
-                            Cantidad = lector.GetInt32(3),
-                            Fecha = lector.GetString(4)
+                            Producto = lector.GetString(2),
+                            Tipo = lector.GetString(3),
+                            Cantidad = lector.GetInt32(4),
+                            Fecha = lector.GetString(5)
                         });
                     }
                 }

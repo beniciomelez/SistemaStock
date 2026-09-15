@@ -130,7 +130,7 @@ namespace SistemaStock.Views
             using (var conexion = Conexion.ObtenerConexion())
             {
                 conexion.Open();
-                string sql = "SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo FROM Productos";
+                string sql = "SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo, Activo FROM Productos WHERE Activo = 1";
                 using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
                 {
                     using (var lector = comando.ExecuteReader())
@@ -144,7 +144,8 @@ namespace SistemaStock.Views
                                 Categoria = lector.GetString(2),
                                 Precio = lector.GetDecimal(3),
                                 Stock = lector.GetInt32(4),
-                                StockMinimo = lector.GetInt32(5)
+                                StockMinimo = lector.GetInt32(5),
+                                Activo = lector.GetBoolean(6)
                             };
                             Datos.Productos.Add(producto);
                         }

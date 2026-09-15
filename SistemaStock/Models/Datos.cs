@@ -19,7 +19,7 @@ namespace SistemaStock.Models
             {
                 conexion.Open();
 
-                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo
+                string sql = @"SELECT Id, Nombre, Categoria, Precio, Stock, StockMinimo, Activo
                        FROM Productos";
 
                 using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
@@ -34,7 +34,8 @@ namespace SistemaStock.Models
                             Categoria = lector.GetString(2),
                             Precio = lector.GetDecimal(3),
                             Stock = lector.GetInt32(4),
-                            StockMinimo = lector.GetInt32(5)
+                            StockMinimo = lector.GetInt32(5),
+                            Activo = lector.GetBoolean(6)
                         });
                     }
                 }
