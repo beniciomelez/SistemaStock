@@ -4,7 +4,87 @@
         Title="Sistema Stock"
         Width="1200"
         Height="700"
-        WindowStartupLocation="CenterScreen">
+        MinWidth="1000"
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#111827">
+
+    <Window.Resources>
+
+        <!-- COLORES -->
+        <SolidColorBrush x:Key="FondoPrincipal" Color="#111827"/>
+        <SolidColorBrush x:Key="FondoSidebar" Color="#172033"/>
+        <SolidColorBrush x:Key="FondoPanel" Color="#1D293D"/>
+        <SolidColorBrush x:Key="FondoPanelClaro" Color="#243249"/>
+        <SolidColorBrush x:Key="TextoPrincipal" Color="#F1F5F9"/>
+        <SolidColorBrush x:Key="TextoSecundario" Color="#94A3B8"/>
+        <SolidColorBrush x:Key="AzulPrincipal" Color="#3B82F6"/>
+
+        <!-- ESTILO BOTONES SIDEBAR -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="#AAB8CC"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="18,14"/>
+            <Setter Property="Margin" Value="12,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="Center"/>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#263B5A"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ESTILO DATAGRID -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#1D293D"/>
+            <Setter Property="Foreground" Value="#DCE6F2"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="RowBackground" Value="#1D293D"/>
+            <Setter Property="AlternatingRowBackground" Value="#202F46"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#243249"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+    </Window.Resources>
+
 
     <Grid>
 
@@ -14,42 +94,196 @@
         </Grid.ColumnDefinitions>
 
 
-        <!-- MENÚ LATERAL -->
+        <!-- ================= SIDEBAR ================= -->
 
         <Border Grid.Column="0"
-                Background="#1E1E2E">
+                Background="{StaticResource FondoSidebar}">
 
-            <StackPanel>
+            <Grid>
 
-                <TextBlock Text="SISTEMA STOCK"
-                           Foreground="White"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           Margin="20"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <Button x:Name="btnInicio" Content="Inicio"
-                        Margin="15,10"/>
 
-                <Button x:Name="btnProductos" Content="Productos"
-                        Margin="15,10" Click="btnProductos_Click"/>
+                <!-- LOGO -->
 
-                <Button x:Name="btnMovimientos" Content="Movimientos"
-                        Margin="15,10" Click="btnMovimientos_Click"/>
+                <StackPanel Grid.Row="0"
+                            Margin="25,28,20,35">
 
-                <Button x:Name="btnConfiguracion" Content="Configuración"
-                        Margin="15,10" Click="btnConfiguracion_Click"/>
+                    <StackPanel Orientation="Horizontal">
 
-            </StackPanel>
+                        <Border Width="34"
+                                Height="34"
+                                Background="#3B82F6"
+                                CornerRadius="9">
+
+                            <TextBlock Text="▲"
+                                       Foreground="White"
+                                       FontSize="17"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+
+                        </Border>
+
+                        <TextBlock Text="StockFlow"
+                                   Foreground="White"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"/>
+
+                    </StackPanel>
+
+                    <TextBlock Text="GESTIÓN DE INVENTARIO"
+                               Foreground="#64748B"
+                               FontSize="9"
+                               FontWeight="SemiBold"
+                               Margin="47,5,0,0"/>
+
+                </StackPanel>
+
+
+                <!-- MENÚ -->
+
+                <StackPanel Grid.Row="1">
+
+                    <TextBlock Text="MENÚ PRINCIPAL"
+                               Foreground="#64748B"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Margin="25,0,0,12"/>
+
+
+                    <Button x:Name="btnInicio"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Background="#263B5A">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="▦"
+                                       FontSize="19"
+                                       Foreground="#60A5FA"
+                                       Width="30"/>
+
+                            <TextBlock Text="Inicio"
+                                       Foreground="White"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <Button x:Name="btnProductos"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnProductos_Click">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="▤"
+                                       FontSize="19"
+                                       Width="30"/>
+
+                            <TextBlock Text="Productos"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <Button x:Name="btnMovimientos"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnMovimientos_Click">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="↕"
+                                       FontSize="21"
+                                       Width="30"/>
+
+                            <TextBlock Text="Movimientos"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <Button x:Name="btnConfiguracion"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnConfiguracion_Click">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="⚙"
+                                       FontSize="18"
+                                       Width="30"/>
+
+                            <TextBlock Text="Configuración"
+                                       VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+                </StackPanel>
+
+
+                <!-- USUARIO / PIE -->
+
+                <Border Grid.Row="2"
+                        BorderBrush="#263449"
+                        BorderThickness="0,1,0,0"
+                        Padding="20">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <Border Width="35"
+                                Height="35"
+                                Background="#334155"
+                                CornerRadius="20">
+
+                            <TextBlock Text="U"
+                                       Foreground="#CBD5E1"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+
+                        </Border>
+
+                        <StackPanel Margin="10,0,0,0">
+
+                            <TextBlock Text="Administrador"
+                                       Foreground="#E2E8F0"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"/>
+
+                            <TextBlock Text="Sistema Stock"
+                                       Foreground="#64748B"
+                                       FontSize="10"/>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </Border>
+
+            </Grid>
 
         </Border>
 
 
-        <!-- CONTENIDO -->
+        <!-- ================= CONTENIDO PRINCIPAL ================= -->
 
         <Border Grid.Column="1"
-                Background="#F5F5F5">
+                Background="{StaticResource FondoPrincipal}">
 
-            <Grid Margin="30">
+            <Grid Margin="35,28,35,30">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -58,109 +292,44 @@
                 </Grid.RowDefinitions>
 
 
-                <!-- TÍTULO -->
+                <!-- HEADER -->
 
-                <StackPanel Grid.Row="0"
-                Margin="0,0,0,25">
+                <Grid Grid.Row="0"
+                      Margin="0,0,0,28">
 
-                    <TextBlock Text="Dashboard"
-                   FontSize="32"
-                   FontWeight="Bold"/>
+                    <StackPanel>
 
-                    <TextBlock Text="Resumen general del inventario"
-                   FontSize="16"
-                   Foreground="Gray"
-                   Margin="0,5,0,0"/>
+                        <TextBlock Text="Dashboard"
+                                   Foreground="{StaticResource TextoPrincipal}"
+                                   FontSize="28"
+                                   FontWeight="Bold"/>
 
-                </StackPanel>
+                        <TextBlock Text="Bienvenido nuevamente. Este es el resumen de tu inventario."
+                                   Foreground="{StaticResource TextoSecundario}"
+                                   FontSize="13"
+                                   Margin="0,6,0,0"/>
 
-
-                <!-- TARJETAS -->
-
-                <Grid Grid.Row="1">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    </StackPanel>
 
 
-                    <!-- PRODUCTOS -->
+                    <!-- FECHA / ESTADO -->
 
-                    <Border Grid.Column="0"
-                Background="White"
-                CornerRadius="10"
-                Padding="20"
-                Margin="0,0,10,0">
+                    <Border HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="#1D293D"
+                            CornerRadius="8"
+                            Padding="15,9">
 
-                        <StackPanel>
+                        <StackPanel Orientation="Horizontal">
 
-                            <TextBlock Text="Productos"
-                           FontSize="16"/>
+                            <Ellipse Width="8"
+                                     Height="8"
+                                     Fill="#22C55E"
+                                     Margin="0,0,8,0"/>
 
-                            <TextBlock x:Name="txtTotalProductos"
-                             Text="0"
-                             FontSize="30"
-                             FontWeight="Bold"
-                             Margin="0,10,0,0"/>
-
-                            <TextBlock Text="Productos registrados"
-                           Foreground="Gray"/>
-
-                        </StackPanel>
-
-                    </Border>
-
-
-                    <!-- STOCK -->
-
-                    <Border Grid.Column="1"
-                Background="White"
-                CornerRadius="10"
-                Padding="20"
-                Margin="5,0">
-
-                        <StackPanel>
-
-                            <TextBlock Text="Stock total"
-                           FontSize="16"/>
-
-                            <TextBlock x:Name="txtStockTotal"
-                                Text="0"
-                                FontSize="30"
-                                FontWeight="Bold"
-                                Margin="0,10,0,0"/>
-
-                            <TextBlock Text="Unidades disponibles"
-                           Foreground="Gray"/>
-
-                        </StackPanel>
-
-                    </Border>
-
-
-                    <!-- ALERTAS -->
-
-                    <Border Grid.Column="2"
-                Background="White"
-                CornerRadius="10"
-                Padding="20"
-                Margin="10,0,0,0">
-
-                        <StackPanel>
-
-                            <TextBlock Text="Stock bajo"
-                           FontSize="16"/>
-
-                            <TextBlock x:Name="txtStockBajo"
-                           Text="0"
-                           FontSize="30"
-                           FontWeight="Bold"
-                           Margin="0,10,0,0"/>
-
-                            <TextBlock Text="Productos para reponer"
-                           Foreground="Gray"/>
+                            <TextBlock Text="Sistema operativo"
+                                       Foreground="#94A3B8"
+                                       FontSize="12"/>
 
                         </StackPanel>
 
@@ -169,49 +338,273 @@
                 </Grid>
 
 
-                <!-- ÚLTIMOS MOVIMIENTOS -->
+                <!-- ================= TARJETAS ================= -->
+
+                <Grid Grid.Row="1"
+                      Margin="0,0,0,25">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <!-- TARJETA PRODUCTOS -->
+
+                    <Border Grid.Column="0"
+                            Background="{StaticResource FondoPanel}"
+                            CornerRadius="12"
+                            Padding="22"
+                            Margin="0,0,10,0">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+
+                                <TextBlock Text="TOTAL PRODUCTOS"
+                                           Foreground="#94A3B8"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="txtTotalProductos"
+                                           Text="0"
+                                           Foreground="#F8FAFC"
+                                           FontSize="30"
+                                           FontWeight="Bold"
+                                           Margin="0,8,0,3"/>
+
+                                <TextBlock Text="Productos registrados"
+                                           Foreground="#64748B"
+                                           FontSize="11"/>
+
+                            </StackPanel>
+
+
+                            <Border Grid.Column="1"
+                                    Width="42"
+                                    Height="42"
+                                    Background="#1E40AF"
+                                    CornerRadius="10"
+                                    Opacity="0.8">
+
+                                <TextBlock Text="▤"
+                                           Foreground="#93C5FD"
+                                           FontSize="22"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+
+                            </Border>
+
+                        </Grid>
+
+                    </Border>
+
+
+                    <!-- TARJETA STOCK -->
+
+                    <Border Grid.Column="1"
+                            Background="{StaticResource FondoPanel}"
+                            CornerRadius="12"
+                            Padding="22"
+                            Margin="5,0">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+
+                                <TextBlock Text="STOCK TOTAL"
+                                           Foreground="#94A3B8"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="txtStockTotal"
+                                           Text="0"
+                                           Foreground="#F8FAFC"
+                                           FontSize="30"
+                                           FontWeight="Bold"
+                                           Margin="0,8,0,3"/>
+
+                                <TextBlock Text="Unidades disponibles"
+                                           Foreground="#64748B"
+                                           FontSize="11"/>
+
+                            </StackPanel>
+
+
+                            <Border Grid.Column="1"
+                                    Width="42"
+                                    Height="42"
+                                    Background="#164E63"
+                                    CornerRadius="10"
+                                    Opacity="0.9">
+
+                                <TextBlock Text="▥"
+                                           Foreground="#67E8F9"
+                                           FontSize="22"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+
+                            </Border>
+
+                        </Grid>
+
+                    </Border>
+
+
+                    <!-- TARJETA STOCK BAJO -->
+
+                    <Border Grid.Column="2"
+                            Background="{StaticResource FondoPanel}"
+                            CornerRadius="12"
+                            Padding="22"
+                            Margin="10,0,0,0">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+
+                                <TextBlock Text="STOCK BAJO"
+                                           Foreground="#94A3B8"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock x:Name="txtStockBajo"
+                                           Text="0"
+                                           Foreground="#F8FAFC"
+                                           FontSize="30"
+                                           FontWeight="Bold"
+                                           Margin="0,8,0,3"/>
+
+                                <TextBlock Text="Productos para reponer"
+                                           Foreground="#64748B"
+                                           FontSize="11"/>
+
+                            </StackPanel>
+
+
+                            <Border Grid.Column="1"
+                                    Width="42"
+                                    Height="42"
+                                    Background="#78350F"
+                                    CornerRadius="10"
+                                    Opacity="0.8">
+
+                                <TextBlock Text="!"
+                                           Foreground="#FBBF24"
+                                           FontSize="23"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+
+                            </Border>
+
+                        </Grid>
+
+                    </Border>
+
+                </Grid>
+
+
+                <!-- ================= ÚLTIMOS MOVIMIENTOS ================= -->
 
                 <Border Grid.Row="2"
-            Background="White"
-            CornerRadius="10"
-            Margin="0,25,0,0"
-            Padding="20">
+                        Background="{StaticResource FondoPanel}"
+                        CornerRadius="12"
+                        Padding="22">
 
-                    <StackPanel>
+                    <Grid>
 
-                        <TextBlock Text="Últimos movimientos"
-               FontSize="20"
-               FontWeight="Bold"
-               Margin="0,0,0,15"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="TablaUltimosMovimientos"
-              AutoGenerateColumns="False"
-              IsReadOnly="True"
-              Height="200">
+
+                        <!-- TITULO PANEL -->
+
+                        <Grid Grid.Row="0"
+                              Margin="0,0,0,18">
+
+                            <StackPanel>
+
+                                <TextBlock Text="Últimos movimientos"
+                                           Foreground="#F1F5F9"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"/>
+
+                                <TextBlock Text="Actividad reciente del inventario"
+                                           Foreground="#64748B"
+                                           FontSize="12"
+                                           Margin="0,4,0,0"/>
+
+                            </StackPanel>
+
+
+                            <Border HorizontalAlignment="Right"
+                                    Background="#243249"
+                                    CornerRadius="6"
+                                    Padding="12,7">
+
+                                <TextBlock Text="Ver historial →"
+                                           Foreground="#60A5FA"
+                                           FontSize="11"/>
+
+                            </Border>
+
+                        </Grid>
+
+
+                        <!-- TABLA -->
+
+                        <DataGrid Grid.Row="1"
+                                  x:Name="TablaUltimosMovimientos"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  HeadersVisibility="Column"
+                                  RowHeight="42"
+                                  ColumnHeaderHeight="38"
+                                  VerticalScrollBarVisibility="Auto">
 
                             <DataGrid.Columns>
 
-                                <DataGridTextColumn Header="Fecha"
-                                Binding="{Binding Fecha}"
-                                Width="150"/>
+                                <DataGridTextColumn Header="FECHA"
+                                                    Binding="{Binding Fecha}"
+                                                    Width="170"/>
 
-                                <DataGridTextColumn Header="Producto"
-                                Binding="{Binding Producto}"
-                                Width="*"/>
+                                <DataGridTextColumn Header="PRODUCTO"
+                                                    Binding="{Binding Producto}"
+                                                    Width="*"/>
 
-                                <DataGridTextColumn Header="Tipo"
-                                Binding="{Binding Tipo}"
-                                Width="120"/>
+                                <DataGridTextColumn Header="TIPO"
+                                                    Binding="{Binding Tipo}"
+                                                    Width="140"/>
 
-                                <DataGridTextColumn Header="Cantidad"
-                                Binding="{Binding Cantidad}"
-                                Width="100"/>
+                                <DataGridTextColumn Header="CANTIDAD"
+                                                    Binding="{Binding Cantidad}"
+                                                    Width="120"/>
 
                             </DataGrid.Columns>
 
                         </DataGrid>
 
-                    </StackPanel>
+                    </Grid>
 
                 </Border>
 

@@ -26,6 +26,18 @@ namespace SistemaStock.Views
 
             cmbTipoMovimiento.SelectedIndex = 0;
         }
+
+        private void SoloNumeros_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            foreach (char c in e.Text)
+            {
+                if (!char.IsDigit(c))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
         private void GuardarMovimiento_Click(object sender, RoutedEventArgs e)
         {
             if (cmbProducto.SelectedItem is Producto productoSeleccionado &&
